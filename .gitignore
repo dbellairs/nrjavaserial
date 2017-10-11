@@ -1,8 +1,11 @@
 /build/
 /bin/
+/out/
 /gradle.properties
 .gradle/*
 .classpath
 .project
+.idea/
+*.iml
 .settings/
 *~*
