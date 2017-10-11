@@ -2,14 +2,14 @@
 # order to generate native libraries compatible with 10.5 and up.
 #
 # See https://stackoverflow.com/questions/5378518/ for installation help.
-OSXSDKPREFIX = /Developer/SDKs/MacOSX10.5.sdk
+OSXSDKPREFIX = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs
 
-OSXJAVAINCLUDE1 = -I/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Headers 
-OSXJAVAINCLUDE2 = -I$(OSXSDKPREFIX)/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers 
-OSXJAVAINCLUDE4 = -I$(OSXSDKPREFIX)/usr/include 
+OSXJAVAINCLUDE1 = -I/System/Library/Frameworks/JavaVM.framework/Versions/Current/Headers
+OSXJAVAINCLUDE2 = -I$(OSXSDKPREFIX)/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers
+OSXJAVAINCLUDE4 = -I$(OSXSDKPREFIX)/usr/include
 OSXJAVAINCLUDE5 = -I./include/OSX/
 
-OSXJAVAINCLUDE = $(OSXJAVAINCLUDE1) $(OSXJAVAINCLUDE2) $(OSXJAVAINCLUDE3) $(OSXJAVAINCLUDE4) $(OSXJAVAINCLUDE5)		
+OSXJAVAINCLUDE = $(OSXJAVAINCLUDE1) $(OSXJAVAINCLUDE2) $(OSXJAVAINCLUDE3) $(OSXJAVAINCLUDE4) $(OSXJAVAINCLUDE5)
 OSXINCLUDE=-I"./include" -I"./include/target"  $(OSXJAVAINCLUDE)
 OSXARCH = -arch i386 -arch x86_64
 CCOSX=cc $(OSXINCLUDE) $(OSXARCH) -g -O2 -D_BSD_SOURCE -c
@@ -43,11 +43,11 @@ BSDOBJ=build/fixup.o build/fuserImp.o build/SerialImp.o
 BSDINCLUDE=-I"./include" -I"./include/target" -I/usr/local/openjdk8/include/ -I/usr/local/openjdk8/include/freebsd/
 
 CCBSD32=cc $(BSDINCLUDE) -O3 -Wall -c -fmessage-length=0 -fPIC -m32 -MMD
-LINKBSD32=c++ -m32 -shared 
+LINKBSD32=c++ -m32 -shared
 
 
 CCBSD64=cc $(BSDINCLUDE) -O3 -Wall -c -fmessage-length=0 -fPIC -m64 -MMD
-LINKBSD64=c++ -m64 -shared 
+LINKBSD64=c++ -m64 -shared
 
 
 #Wine Windows
@@ -101,7 +101,7 @@ dirs:
 	 mkdir -p resources/native/freebsd/x86_64/; \
 	 mkdir -p resources/native/freebsd/x86_32/; \
 	fi
-	 
+
 windowsLocal:
 	$(CCWIN64N) -c src/windows/init.c -o build/init.o
 	$(CCWIN64N) -c src/windows/termios.c -o build/termios.o
@@ -109,16 +109,16 @@ windowsLocal:
 	$(CCWIN64N) -c src/fuserImp.c -o build/fuserImp.o
 	$(CCWIN64N) -c src/SerialImp.c -o build/SerialImp.o
 	$(LINKWIN64N) -o"resources/native/windows/x86_64/libNRJavaSerial.dll" build/SerialImp.o build/fuserImp.o build/fixup.o build/termios.o build/init.o
-	
+
 	$(CCWIN32N) -c src/windows/init.c -o build/init.o
 	$(CCWIN32N) -c src/windows/termios.c -o build/termios.o
 	$(CCWIN32N) -c src/fixup.c -o build/fixup.o
 	$(CCWIN32N) -c src/fuserImp.c -o build/fuserImp.o
 	$(CCWIN32N) -c src/SerialImp.c -o build/SerialImp.o
 	$(LINKWIN32N) -o"resources/native/windows/x86_32/libNRJavaSerial.dll" build/SerialImp.o build/fuserImp.o build/fixup.o build/termios.o build/init.o
-		
 
-	
+
+
 windows:dirs
 	export WINEPREFIX=/home/hephaestus/.wine/
 	$(CCWIN32) src/windows/init.c -o build/init.o
@@ -128,7 +128,7 @@ windows:dirs
 	$(CCWIN32) src/SerialImp.c -o build/SerialImp.o
 	$(LINKWIN32) -o"resources/native/windows/x86_32/libNRJavaSerial.dll" build/SerialImp.o build/fuserImp.o build/fixup.o build/termios.o build/init.o
 	rm build/*
-	
+
 	#$(CCWIN64) src/windows/init.c -o build/init.o
 	#$(CCWIN64) src/windows/termios.c -o build/termios.o
 	#$(CCWIN64) src/fixup.c -o build/fixup.o
@@ -146,7 +146,7 @@ linux32:dirs
 	#rm "resources/native/linux/x86_32/libNRJavaSerial.so"
 	$(LINKLIN32) -o"resources/native/linux/x86_32/libNRJavaSerial.so" $(LINOBJ) -llockdev
 	rm build/*
-linux64:dirs	
+linux64:dirs
 	$(CCLIN64) src/fixup.c -o build/fixup.o
 	$(CCLIN64) src/fuserImp.c -o build/fuserImp.o
 	$(CCLIN64) src/SerialImp.c -o build/SerialImp.o
@@ -162,14 +162,14 @@ freebsd32:dirs
 	#rm "resources/native/freebsd/x86_32/libNRJavaSerial.so"
 	$(LINKBSD32) -o"resources/native/freebsd/x86_32/libNRJavaSerial.so" $(LINOBJ)
 	rm build/*
-freebsd64:dirs	
+freebsd64:dirs
 	$(CCBSD64) src/fixup.c -o build/fixup.o
 	$(CCBSD64) src/fuserImp.c -o build/fuserImp.o
 	$(CCBSD64) src/SerialImp.c -o build/SerialImp.o
 	#rm "resources/native/freebsd/x86_64/libNRJavaSerial.so"
 	$(LINKBSD64) -o"resources/native/freebsd/x86_64/libNRJavaSerial.so" $(LINOBJ)
-	rm -rf build	
-	
+	rm -rf build
+
 .PHONY: arm
 arm:
 	$(MAKE) arm8
@@ -187,13 +187,13 @@ arm8:	dirs
 	$(CCLINARM) -march=armv8-a src/SerialImp.c -o build/SerialImp.o
 	$(LINKLINARM) -march=armv8-a -o"resources/native/linux/ARM/libNRJavaSerialv8.so" $(LINOBJ) -llockdev
 	rm -rf build
-	
+
 arm8HF:dirs
 	$(CCLINARM_HF) -march=armv8-a src/fixup.c -o build/fixup.o
 	$(CCLINARM_HF) -march=armv8-a src/fuserImp.c -o build/fuserImp.o
 	$(CCLINARM_HF) -march=armv8-a src/SerialImp.c -o build/SerialImp.o
 	$(LINKLINARM_HF) -march=armv8-a -o"resources/native/linux/ARM/libNRJavaSerialv8_HF.so" $(LINOBJ) -llockdev
-	rm  build/*	
+	rm  build/*
 
 arm7:	dirs
 	$(CCLINARM) -march=armv7-a src/fixup.c -o build/fixup.o
@@ -201,14 +201,14 @@ arm7:	dirs
 	$(CCLINARM) -march=armv7-a src/SerialImp.c -o build/SerialImp.o
 	$(LINKLINARM) -march=armv7-a -o"resources/native/linux/ARM/libNRJavaSerialv7.so" $(LINOBJ) -llockdev
 	rm -rf build
-	
+
 arm7HF:dirs
 	$(CCLINARM_HF) -march=armv7-a src/fixup.c -o build/fixup.o
 	$(CCLINARM_HF) -march=armv7-a src/fuserImp.c -o build/fuserImp.o
 	$(CCLINARM_HF) -march=armv7-a src/SerialImp.c -o build/SerialImp.o
 	$(LINKLINARM_HF) -march=armv7-a -o"resources/native/linux/ARM/libNRJavaSerialv7_HF.so" $(LINOBJ) -llockdev
-	rm  build/*	
-	
+	rm  build/*
+
 arm6:	dirs
 	$(CCLINARM) -march=armv6 src/fixup.c -o build/fixup.o
 	$(CCLINARM) -march=armv6 src/fuserImp.c -o build/fuserImp.o
@@ -220,7 +220,7 @@ arm6HF:dirs
 	$(CCLINARM_HF) -march=armv6 -mfpu=vfp -marm src/fuserImp.c -o build/fuserImp.o
 	$(CCLINARM_HF) -march=armv6 -mfpu=vfp -marm src/SerialImp.c -o build/SerialImp.o
 	$(LINKLINARM_HF) -march=armv6 -mfpu=vfp -marm -o"resources/native/linux/ARM/libNRJavaSerialv6_HF.so" $(LINOBJ) -llockdev
-	rm  build/*	
+	rm  build/*
 
 arm5:	dirs
 	$(CCLINARM) -march=armv5t src/fixup.c -o build/fixup.o
@@ -235,7 +235,7 @@ ppc:   dirs
 	$(CCLINPPC) src/SerialImp.c -o build/SerialImp.o
 	$(LINKLINPPC) -o"resources/native/linux/PPC/libNRJavaSerial.so" $(LINOBJ)
 	rm -rf build
-	
+
 osx:dirs
 	if (test -d include/OSX/CoreFoundation/);\
 	then\
@@ -244,7 +244,7 @@ osx:dirs
 		rm include/OSX/CoreFoundation;\
 		ln -s $(OSXSDKPREFIX)/System/Library/Frameworks/CoreFoundation.framework/Headers/ include/OSX/CoreFoundation; \
 	fi
-	
+
 	if (test -d include/OSX/CoreServices/);\
 	then\
 		echo "CoreServices framework symlink exists.";\
@@ -252,7 +252,7 @@ osx:dirs
 		rm include/OSX/CoreServices;\
 		ln -s $(OSXSDKPREFIX)/System/Library/Frameworks/CoreServices.framework/Headers/ include/OSX/CoreServices; \
 	fi
-	
+
 	if (test -d include/OSX/CarbonCore/);\
 	then\
 		echo "CarbonCore framework symlink exists.";\
@@ -260,7 +260,7 @@ osx:dirs
 		rm include/OSX/CarbonCore;\
 		ln -s $(OSXSDKPREFIX)/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/Headers include/OSX/CarbonCore; \
 	fi
-	
+
 	if (test -d include/OSX/IOKit/);\
 	then\
 		echo "IOKit framework symlink exists";\
@@ -268,9 +268,8 @@ osx:dirs
 		rm include/OSX/IOKit;\
 		ln -s $(OSXSDKPREFIX)/System/Library/Frameworks/IOKit.framework/Headers include/OSX/IOKit; \
 	fi
-	
+
 	$(CCOSX) src/fuserImp.c -o build/fuserImp.o
 	$(CCOSX) src/SerialImp.c -o build/SerialImp.o
 	$(LINKOSX) -o "./resources/native/osx/libNRJavaSerial.jnilib" build/SerialImp.o build/fuserImp.o
-	rm -rf build	
-	
+	rm -rf build
