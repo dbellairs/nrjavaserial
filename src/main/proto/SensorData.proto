@@ -22,5 +22,5 @@ message Sensor {
 }
 
 message SensorData {
-  required Sensor sensors = 1;
+  repeated Sensor sensors = 1;
 }
