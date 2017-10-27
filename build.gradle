@@ -3,8 +3,10 @@
 apply plugin: 'java'
 apply plugin: 'osgi'
 apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'signing'
+apply plugin: 'com.google.protobuf'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -21,7 +23,7 @@ version = props."app.version"
 sourceSets {
     test {
         java {
-            srcDirs = ["test/java/src"]
+            srcDirs = ["test/java/src/"]
         }
     }
     main {
@@ -43,12 +45,38 @@ repositories {
     jcenter()
 }
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.3'
+    }
+}
+
+protobuf {
+    generatedFilesBaseDir = "$projectDir/gen"
+}
+
+clean {
+    delete protobuf.generatedFilesBaseDir
+}
+
+idea {
+    module {
+        testSourceDirs += file("${protobuf.generatedFilesBaseDir}/main/java");
+        // If you have additional sourceSets and/or codegen plugins, add all of them
+        //sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/grpc");
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', includes: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'commons-net:commons-net:3.6'
     compile 'net.java.dev.jna:jna:4.5.0'
     compile 'net.java.dev.jna:jna-platform:4.5.0'
+    compile 'com.google.protobuf:protobuf-java:3.4.0'
 }
 
 jar {
@@ -91,4 +119,3 @@ artifacts {
     archives sourcesJar
     archives jar
 }
-
